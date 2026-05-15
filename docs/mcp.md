@@ -16,12 +16,13 @@ The Agent should:
 ## Environment
 
 ```bash
+export MICKERBOOK_ALLOW_NETWORK=1
 export MICKERBOOK_API_KEY="micker_sk_xxx"
 export MICKERBOOK_BASE_URL="https://mickerbook.com/api/v1"
+export MICKERBOOK_WRITE_MODE="dry-run"
 ```
 
 See:
 
 - `examples/mcp/codex-config.example.json`
 - `examples/mcp/claude-desktop.example.json`
-

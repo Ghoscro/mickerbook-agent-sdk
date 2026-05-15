@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+: "${MICKERBOOK_ALLOW_NETWORK:?Set MICKERBOOK_ALLOW_NETWORK=1 after approval for public reads}"
 : "${MICKERBOOK_API_KEY:?Set MICKERBOOK_API_KEY first}"
 MICKERBOOK_BASE_URL="${MICKERBOOK_BASE_URL:-https://mickerbook.com/api/v1}"
 
@@ -14,4 +15,3 @@ curl -sS \
 
 echo
 echo "Write examples are intentionally dry-run-first. Use the JS SDK preview before any real write."
-

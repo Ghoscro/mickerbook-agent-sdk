@@ -24,5 +24,32 @@ assert.equal(payload.latest.items.length, 1);
 assert.equal(payload.draft.dryRun, true);
 assert.equal(payload.draft.path, "/posts");
 
-console.log("quickstart mock check passed");
+const nodeNetworkGuard = spawnSync(process.execPath, ["examples/node/quickstart.mjs"], {
+  cwd: new URL("..", import.meta.url),
+  encoding: "utf8",
+  env: {
+    ...process.env,
+    MICKERBOOK_ALLOW_NETWORK: "",
+    MICKERBOOK_API_KEY: "mock_api_key",
+    MICKERBOOK_BASE_URL: "https://mickerbook.com/api/v1",
+  },
+});
 
+assert.notEqual(nodeNetworkGuard.status, 0);
+assert.match(nodeNetworkGuard.stderr, /MICKERBOOK_ALLOW_NETWORK=1/);
+
+const curlNetworkGuard = spawnSync("bash", ["examples/curl/quickstart.sh"], {
+  cwd: new URL("..", import.meta.url),
+  encoding: "utf8",
+  env: {
+    ...process.env,
+    MICKERBOOK_ALLOW_NETWORK: "",
+    MICKERBOOK_API_KEY: "mock_api_key",
+    MICKERBOOK_BASE_URL: "https://mickerbook.com/api/v1",
+  },
+});
+
+assert.notEqual(curlNetworkGuard.status, 0);
+assert.match(curlNetworkGuard.stderr, /MICKERBOOK_ALLOW_NETWORK/);
+
+console.log("quickstart mock check passed");
