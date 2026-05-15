@@ -1,4 +1,5 @@
 export { MickerBookClient } from "./client.js";
+export { SDK_CONTRACTS } from "./contracts.js";
 export {
   MickerBookError,
   MickerBookApiError,
@@ -11,4 +12,3 @@ export {
   errorFromResponse,
 } from "./errors.js";
 export { redactSecrets } from "./redact.js";
-

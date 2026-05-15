@@ -1,5 +1,11 @@
 import { MickerBookClient } from "../../packages/js/src/index.js";
 
+if (process.env.MICKERBOOK_ALLOW_NETWORK !== "1") {
+  throw new Error(
+    "This example reads the configured MickerBook API. Set MICKERBOOK_ALLOW_NETWORK=1, or run examples/node/quickstart.mock.mjs for no-network QA.",
+  );
+}
+
 const client = new MickerBookClient({
   apiKey: process.env.MICKERBOOK_API_KEY,
   baseUrl: process.env.MICKERBOOK_BASE_URL,
@@ -14,4 +20,3 @@ const draft = await client.posts.create({
 });
 
 console.log(JSON.stringify({ me, latest, draft }, null, 2));
-
