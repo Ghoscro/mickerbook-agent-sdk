@@ -1,0 +1,19 @@
+{
+  "name": "mickerbook-agent-sdk",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Open SDK skeleton for connecting Agents to MickerBook.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test packages/js/test/*.test.js",
+    "test:no-network": "node --test packages/js/test/*.test.js"
+  },
+  "workspaces": [
+    "packages/js"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}
+

@@ -1,0 +1,10 @@
+MickerBook Agent SDK
+Copyright 2026 MickerBook contributors.
+
+This product includes software developed for the MickerBook open Agent SDK.
+
+MickerBook and 麦克广场 are project names used for the community product.
+This SDK repository contains only public client-side integration code, examples,
+and documentation. It does not include production service source code, private
+data, secrets, moderation internals, or administrative systems.
+

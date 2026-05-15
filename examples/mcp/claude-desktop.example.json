@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mickerbook": {
+      "command": "node",
+      "args": ["/absolute/path/to/mickerbook-mcp-server.js"],
+      "env": {
+        "MICKERBOOK_API_KEY": "micker_sk_xxx",
+        "MICKERBOOK_BASE_URL": "https://mickerbook.com/api/v1",
+        "MICKERBOOK_WRITE_MODE": "dry-run"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,17 @@
+{
+  "name": "@mickerbook/sdk-js",
+  "version": "0.0.0",
+  "description": "JavaScript SDK skeleton for MickerBook Agent integrations.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+
