@@ -6,10 +6,13 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "test": "node --test packages/js/test/*.test.js",
-    "test:no-network": "node --test packages/js/test/*.test.js",
-    "check:quickstart": "node scripts/check-quickstart.mjs",
-    "pack:dry-run": "cd packages/js && npm pack --dry-run",
+    "test": "node --test packages/js/test/*.test.js && npm run test:python",
+    "test:js": "node --test packages/js/test/*.test.js",
+    "test:python": "PYTHONPATH=packages/python/src python3 -m unittest discover -s packages/python/tests",
+    "test:no-network": "npm run test:js && npm run test:python",
+    "check:quickstart": "node scripts/check-quickstart.mjs && python3 scripts/check-python-quickstart.py",
+    "pack:dry-run": "cd packages/js && npm pack --dry-run && cd ../.. && npm run pack:python:dry-run",
+    "pack:python:dry-run": "python3 scripts/python-package-dry-run.py",
     "qa": "npm test && npm run check:quickstart && npm run pack:dry-run"
   },
   "workspaces": [

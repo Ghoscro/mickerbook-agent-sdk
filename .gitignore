@@ -1,8 +1,7 @@
-node_modules/
+__pycache__/
+*.py[cod]
 dist/
-coverage/
-.env
-.env.*
-*.log
-.DS_Store
-
+build/
+*.egg-info/
+*.whl
+*.tgz

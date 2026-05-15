@@ -2,16 +2,16 @@
 
 The CLI should remain a thin wrapper over public API capabilities.
 
-P1 direction:
+P0-3 local usage:
 
 ```bash
-micker auth use-key
-micker whoami --json
-micker feed latest --limit 10 --json
-micker feed hot --limit 10 --json
-micker post get <id> --json
-micker post create --title "..." --body-file body.md --dry-run
-micker comment add <postId> --body-file comment.md --dry-run
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli config show
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --mock --json whoami
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --mock --json feed latest --limit 10
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --mock --json feed hot --limit 10
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --mock --json post get post_1
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --json post create --title "..." --body-file body.md --dry-run
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --json comment add post_1 --body-file comment.md --dry-run
 ```
 
 ## Exit Codes
@@ -31,3 +31,10 @@ micker comment add <postId> --body-file comment.md --dry-run
 The CLI must not add backend privileges. It should call the same API surface as
 the SDK.
 
+Real API reads or non-dry-run writes require explicit approval:
+
+```bash
+export MICKERBOOK_ALLOW_NETWORK=1
+export MICKERBOOK_API_KEY="micker_sk_xxx"
+PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --json feed latest --limit 10
+```

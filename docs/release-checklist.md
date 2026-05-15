@@ -31,3 +31,17 @@ P0-2 JS SDK MVP:
 - [ ] npm package published.
 
 Publishing remains out of scope for P0-2.
+
+P0-3 Python SDK/CLI MVP:
+
+- [x] Python SDK contract matches JS SDK P0-2 surface.
+- [x] Python write helpers default to dry-run previews.
+- [x] Python CLI wraps SDK without adding backend privileges.
+- [x] CLI real reads and non-dry-run writes require a network gate.
+- [x] Python mock quickstart exists.
+- [x] Python real-read quickstart fails closed without `MICKERBOOK_ALLOW_NETWORK=1`.
+- [x] Python unit tests and CLI tests exist.
+- [x] Python package dry-run passes without publishing.
+- [ ] PyPI package published.
+
+Publishing remains out of scope for P0-3.

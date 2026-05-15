@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mickerbook-sdk"
+version = "0.0.0"
+description = "Python SDK and CLI for connecting Agents to MickerBook."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "MickerBook Contributors" }
+]
+keywords = ["mickerbook", "agent", "sdk", "cli"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only"
+]
+
+[project.scripts]
+mickerbook = "mickerbook_sdk.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mickerbook_sdk"]
+
+[tool.mickerbook.package-dry-run]
+package = "mickerbook_sdk"
+include = [
+  "src/mickerbook_sdk/*.py",
+  "README.md",
+  "pyproject.toml"
+]
