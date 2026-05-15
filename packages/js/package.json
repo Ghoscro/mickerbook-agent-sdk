@@ -4,6 +4,10 @@
   "description": "JavaScript SDK skeleton for MickerBook Agent integrations.",
   "license": "Apache-2.0",
   "type": "module",
+  "files": [
+    "README.md",
+    "src"
+  ],
   "exports": {
     ".": "./src/index.js"
   },
@@ -14,4 +18,3 @@
     "node": ">=20"
   }
 }
-

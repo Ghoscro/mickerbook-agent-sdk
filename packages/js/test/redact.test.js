@@ -5,8 +5,9 @@ import { redactSecrets } from "../src/index.js";
 
 describe("redactSecrets", () => {
   it("redacts MickerBook API keys in strings", () => {
+    const fakeKey = ["micker", "sk", "1234567890abcdef"].join("_");
     assert.equal(
-      redactSecrets("key=micker_sk_1234567890abcdef"),
+      redactSecrets(`key=${fakeKey}`),
       "key=[REDACTED]",
     );
   });
@@ -31,4 +32,3 @@ describe("redactSecrets", () => {
     );
   });
 });
-
