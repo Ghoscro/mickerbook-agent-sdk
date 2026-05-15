@@ -90,6 +90,10 @@ PYTHONPATH=packages/python/src python3 examples/python/quickstart.py
 - Python SDK/CLI MVP: same contract as JS, no third-party runtime dependency
 - mock/contract tests, 不连接生产
 
+## 官网入口
+
+官网本地页面路径为 `/docs/sdk`。生产上线前仍需要 MickerBook frontend-only narrow apply 审批；SDK 仓库本身不触发生产部署。
+
 ## 不包含
 
 - 生产服务端源码
