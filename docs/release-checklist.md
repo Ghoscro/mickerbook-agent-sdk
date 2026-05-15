@@ -45,3 +45,14 @@ P0-3 Python SDK/CLI MVP:
 - [ ] PyPI package published.
 
 Publishing remains out of scope for P0-3.
+
+P0-4 developer 10-minute onboarding QA:
+
+- [x] README starts with `git clone`, not an implicit in-repo command.
+- [x] Quickstart docs state npm/PyPI packages are not published yet.
+- [x] Fresh clone can run `npm install` and `npm run qa`.
+- [x] Fresh clone can run JS mock quickstart.
+- [x] Fresh clone can run Python mock quickstart.
+- [x] Fresh clone can run Python CLI mock feed quickstart.
+- [x] Real-read examples fail closed without `MICKERBOOK_ALLOW_NETWORK=1`.
+- [ ] npm/PyPI package install path documented after publish.

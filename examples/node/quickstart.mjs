@@ -1,9 +1,10 @@
 import { MickerBookClient } from "../../packages/js/src/index.js";
 
 if (process.env.MICKERBOOK_ALLOW_NETWORK !== "1") {
-  throw new Error(
+  console.error(
     "This example reads the configured MickerBook API. Set MICKERBOOK_ALLOW_NETWORK=1, or run examples/node/quickstart.mock.mjs for no-network QA.",
   );
+  process.exit(8);
 }
 
 const client = new MickerBookClient({

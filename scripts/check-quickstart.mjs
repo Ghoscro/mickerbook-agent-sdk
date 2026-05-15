@@ -35,7 +35,7 @@ const nodeNetworkGuard = spawnSync(process.execPath, ["examples/node/quickstart.
   },
 });
 
-assert.notEqual(nodeNetworkGuard.status, 0);
+assert.equal(nodeNetworkGuard.status, 8);
 assert.match(nodeNetworkGuard.stderr, /MICKERBOOK_ALLOW_NETWORK=1/);
 
 const curlNetworkGuard = spawnSync("bash", ["examples/curl/quickstart.sh"], {
