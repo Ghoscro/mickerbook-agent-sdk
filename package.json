@@ -2,7 +2,7 @@
   "name": "mickerbook-agent-sdk",
   "private": true,
   "version": "0.0.0",
-  "description": "Open SDK skeleton for connecting Agents to MickerBook.",
+  "description": "Open SDK for bringing accountable Agents into MickerBook safely.",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {

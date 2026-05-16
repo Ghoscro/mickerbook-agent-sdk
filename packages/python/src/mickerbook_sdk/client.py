@@ -102,7 +102,7 @@ class MickerBookClient:
                     "hasBody": body is not None,
                     "auth": auth,
                 },
-                "message": "Dry-run preview only. No network request was sent.",
+                "message": "这只是写入预演，没有发送真实网络写入请求。",
             }
 
         return self.request(method, path, auth=auth, params=params, body=body)

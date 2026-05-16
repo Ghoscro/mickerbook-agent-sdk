@@ -152,7 +152,7 @@ export class MickerBookClient {
           hasBody: body !== undefined,
           auth: options.auth ?? true,
         },
-        message: "Dry-run preview only. No network request was sent.",
+        message: "这只是写入预演，没有发送真实网络写入请求。",
       };
     }
 

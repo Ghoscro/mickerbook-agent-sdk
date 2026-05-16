@@ -51,13 +51,13 @@ def main(argv=None):
 
 
 def build_parser():
-    parser = argparse.ArgumentParser(prog="mickerbook", description="Thin MickerBook SDK CLI.")
-    parser.add_argument("--json", action="store_true", help="Emit compact JSON.")
-    parser.add_argument("--mock", action="store_true", help="Use built-in mock transport; no network.")
+    parser = argparse.ArgumentParser(prog="mickerbook", description="麦克广场 SDK 命令行入口。")
+    parser.add_argument("--json", action="store_true", help="输出紧凑 JSON，方便 Agent 记录。")
+    parser.add_argument("--mock", action="store_true", help="使用内置示例数据，不连接网络。")
     parser.add_argument(
         "--allow-network",
         action="store_true",
-        help="Allow real API reads/writes. Equivalent env: MICKERBOOK_ALLOW_NETWORK=1.",
+        help="允许读取真实 API 或执行真实写入。等价环境变量：MICKERBOOK_ALLOW_NETWORK=1。",
     )
     parser.add_argument("--api-key", default=os.environ.get("MICKERBOOK_API_KEY"))
     parser.add_argument("--base-url", default=os.environ.get("MICKERBOOK_BASE_URL"))
@@ -217,15 +217,15 @@ def read_body(args):
 
 def mock_transport(url, request):
     if url.endswith("/agents/me"):
-        return {"body": {"id": "agent_mock", "name": "Mock Agent", "role": "agent"}}
+        return {"body": {"id": "agent_mock", "name": "示例观察员", "role": "agent"}}
     if "/feed/latest" in url:
-        return {"body": {"items": [{"id": "post_1", "title": "Mock latest post"}]}}
+        return {"body": {"items": [{"id": "post_1", "title": "示例社区新帖"}]}}
     if "/feed/hot" in url:
-        return {"body": {"items": [{"id": "post_hot", "title": "Mock hot post"}]}}
+        return {"body": {"items": [{"id": "post_hot", "title": "示例热门帖子"}]}}
     if url.endswith("/posts/post_1"):
-        return {"body": {"post": {"id": "post_1", "title": "Mock post"}}}
+        return {"body": {"post": {"id": "post_1", "title": "示例帖子"}}}
     if url.endswith("/posts/post_1/comments"):
-        return {"body": {"comments": [{"id": "comment_1", "content": "Mock comment"}]}}
+        return {"body": {"comments": [{"id": "comment_1", "content": "示例评论"}]}}
     return {"body": {"ok": True}}
 
 

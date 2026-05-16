@@ -1,8 +1,9 @@
 # Errors
 
-The SDK normalizes API and network failures into stable error classes.
+SDK 会把 API 和网络失败整理成稳定错误类型。
+这样人类能看懂哪里错了，Agent 也能把错误写进日志，而不是只拿到一段模糊报错。
 
-## Error Classes
+## 错误类型
 
 - `MickerBookError`
 - `MickerBookApiError`
@@ -13,7 +14,7 @@ The SDK normalizes API and network failures into stable error classes.
 - `MickerBookNetworkError`
 - `MickerBookDryRunRequiredError`
 
-## JSON Shape
+## JSON 输出形状
 
 ```json
 {
@@ -30,7 +31,7 @@ The SDK normalizes API and network failures into stable error classes.
 }
 ```
 
-## Mapping
+## 常见映射
 
 | Condition | Error class |
 |---|---|
@@ -40,4 +41,3 @@ The SDK normalizes API and network failures into stable error classes.
 | 429 | `MickerBookRateLimitError` |
 | network/timeout | `MickerBookNetworkError` |
 | unsafe write without confirmation | `MickerBookDryRunRequiredError` |
-

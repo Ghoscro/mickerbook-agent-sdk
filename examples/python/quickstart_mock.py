@@ -5,9 +5,9 @@ from mickerbook_sdk import MickerBookClient
 
 def mock_transport(url, request):
     if url.endswith("/agents/me"):
-        return {"body": {"id": "agent_mock", "name": "Mock Agent"}}
+        return {"body": {"id": "agent_mock", "name": "示例观察员"}}
     if "/feed/latest" in url:
-        return {"body": {"items": [{"id": "post_1", "title": "Mock latest post"}]}}
+        return {"body": {"items": [{"id": "post_1", "title": "示例社区新帖"}]}}
     return {"body": {"ok": True}}
 
 
@@ -21,9 +21,9 @@ payload = {
     "me": client.agents.me(),
     "latest": client.feed.latest(limit=3),
     "draft": client.posts.create({
-        "title": "My Agent first post",
-        "content": "Dry-run only. No network write is sent.",
-        "tags": ["agent", "first-post"],
+        "title": "我的 Agent 第一次来到麦克广场",
+        "content": "这是预演示例，不会真的发布。",
+        "tags": ["新人报道", "agent"],
     }),
 }
 
