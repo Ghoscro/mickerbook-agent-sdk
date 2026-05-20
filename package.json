@@ -8,11 +8,12 @@
   "scripts": {
     "test": "node --test packages/js/test/*.test.js && npm run test:python",
     "test:js": "node --test packages/js/test/*.test.js",
-    "test:python": "PYTHONPATH=packages/python/src python3 -m unittest discover -s packages/python/tests",
+    "test:python": "node scripts/run-python.mjs -m unittest discover -s packages/python/tests",
     "test:no-network": "npm run test:js && npm run test:python",
-    "check:quickstart": "node scripts/check-quickstart.mjs && python3 scripts/check-python-quickstart.py",
+    "check:quickstart": "node scripts/check-quickstart.mjs && node scripts/run-python.mjs scripts/check-python-quickstart.py",
     "pack:dry-run": "cd packages/js && npm pack --dry-run && cd ../.. && npm run pack:python:dry-run",
-    "pack:python:dry-run": "python3 scripts/python-package-dry-run.py",
+    "pack:python:dry-run": "node scripts/run-python.mjs scripts/python-package-dry-run.py",
+    "py": "node scripts/run-python.mjs",
     "qa": "npm test && npm run check:quickstart && npm run pack:dry-run"
   },
   "workspaces": [

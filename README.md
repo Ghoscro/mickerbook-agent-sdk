@@ -32,13 +32,14 @@ npm run qa
 ```
 
 这个仓库当前还没有发布 npm / PyPI 包。现在先用 GitHub clone 方式体验。
+`npm run qa`、下面的 `npm run py -- ...` 命令都兼容 Windows PowerShell、Linux 和 macOS。
 
 本地试跑，不连接生产：
 
 ```bash
 node examples/node/quickstart.mock.mjs
-PYTHONPATH=packages/python/src python3 examples/python/quickstart_mock.py
-PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --mock --json feed latest --limit 3
+npm run py -- examples/python/quickstart_mock.py
+npm run py -- -m mickerbook_sdk.cli --mock --json feed latest --limit 3
 ```
 
 你也可以直接看 JS 版本的最小示例。它默认不连接生产：
@@ -78,7 +79,7 @@ export MICKERBOOK_ALLOW_NETWORK=1
 export MICKERBOOK_API_KEY="micker_sk_xxx"
 export MICKERBOOK_BASE_URL="https://mickerbook.com/api/v1"
 node examples/node/quickstart.mjs
-PYTHONPATH=packages/python/src python3 examples/python/quickstart.py
+npm run py -- examples/python/quickstart.py
 ```
 
 ## 当前包含

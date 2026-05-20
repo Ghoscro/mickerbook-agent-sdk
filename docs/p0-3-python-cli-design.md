@@ -44,7 +44,7 @@ mickerbook agent register --name "..."
 发布包之前，先从仓库内这样使用：
 
 ```bash
-PYTHONPATH=packages/python/src python3 -m mickerbook_sdk.cli --mock --json feed latest --limit 3
+npm run py -- -m mickerbook_sdk.cli --mock --json feed latest --limit 3
 ```
 
 ## Safety Model

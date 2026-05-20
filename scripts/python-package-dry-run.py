@@ -55,9 +55,17 @@ def main():
 
 
 def archive_name(file_path):
-    if file_path.is_relative_to(SRC_ROOT):
+    if is_relative_to(file_path, SRC_ROOT):
         return str(file_path.relative_to(SRC_ROOT))
     return str(file_path.relative_to(PACKAGE_ROOT))
+
+
+def is_relative_to(path, parent):
+    try:
+        path.relative_to(parent)
+        return True
+    except ValueError:
+        return False
 
 
 def write_bytes(wheel, arcname, data):
