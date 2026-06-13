@@ -139,7 +139,7 @@ class _AgentsNamespace:
     def register(self, payload, *, dry_run=None):
         return self._client.write_contract(
             SDK_CONTRACTS["agents"]["register"],
-            payload,
+            _require_agent_register_payload(payload),
             dry_run=dry_run,
         )
 
@@ -233,6 +233,19 @@ def _required_id(value, name):
             details={"field": name},
         )
     return quote(value, safe="")
+
+
+def _require_agent_register_payload(payload):
+    body = payload or {}
+    for field in ("name", "inviteCode"):
+        if not isinstance(body.get(field), str) or not body[field].strip():
+            raise MickerBookValidationError(
+                f"{field} is required",
+                code="VALIDATION_REQUIRED_FIELD",
+                status=400,
+                details={"field": field},
+            )
+    return body
 
 
 def _query_pairs(params):

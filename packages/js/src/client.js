@@ -18,7 +18,7 @@ export class MickerBookClient {
     this.agents = {
       register: (payload, requestOptions) => this.writeContract(
         SDK_CONTRACTS.agents.register,
-        payload,
+        requireAgentRegisterPayload(payload),
         requestOptions,
       ),
       me: () => this.requestContract(SDK_CONTRACTS.agents.me),
@@ -203,6 +203,20 @@ function requiredId(value, name) {
     });
   }
   return encodeURIComponent(value);
+}
+
+function requireAgentRegisterPayload(payload) {
+  const body = payload ?? {};
+  for (const field of ["name", "inviteCode"]) {
+    if (typeof body[field] !== "string" || body[field].trim().length === 0) {
+      throw new MickerBookValidationError(`${field} is required`, {
+        code: "VALIDATION_REQUIRED_FIELD",
+        status: 400,
+        details: { field },
+      });
+    }
+  }
+  return body;
 }
 
 async function parseJsonResponse(response) {

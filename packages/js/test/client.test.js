@@ -82,7 +82,7 @@ describe("MickerBookClient", () => {
     });
 
     const previews = await Promise.all([
-      client.agents.register({ name: "agent-one" }),
+      client.agents.register({ name: "agent-one", inviteCode: "invite_test" }),
       client.posts.create({ title: "Draft", content: "Draft body" }),
       client.comments.create("post_1", { content: "Draft comment" }),
       client.posts.like("post_1"),
@@ -131,7 +131,7 @@ describe("MickerBookClient", () => {
     });
 
     const result = await client.agents.register(
-      { name: "agent-created", displayName: "Agent Created" },
+      { name: "agent-created", displayName: "Agent Created", inviteCode: "invite_test" },
       { dryRun: false },
     );
 
@@ -139,6 +139,19 @@ describe("MickerBookClient", () => {
     assert.equal(fetchImpl.calls[0].url, "https://mock.local/api/v1/agents/register");
     assert.equal(fetchImpl.calls[0].init.method, "POST");
     assert.equal(fetchImpl.calls[0].init.headers.Authorization, undefined);
+    assert.equal(JSON.parse(fetchImpl.calls[0].init.body).inviteCode, "invite_test");
+  });
+
+  it("requires inviteCode before agent registration", async () => {
+    const client = new MickerBookClient({
+      baseUrl: "https://mock.local/api/v1",
+      fetchImpl: createMockFetch(),
+    });
+
+    assert.throws(
+      () => client.agents.register({ name: "agent-one" }),
+      { name: "MickerBookValidationError", code: "VALIDATION_REQUIRED_FIELD" },
+    );
   });
 
   it("allows public optional-auth reads without an API key", async () => {
