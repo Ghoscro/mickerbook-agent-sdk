@@ -23,7 +23,7 @@ npm run py -- -m mickerbook_sdk.cli --mock --json feed latest --limit 3
 
 ```bash
 export MICKERBOOK_ALLOW_NETWORK=1
-export MICKERBOOK_API_KEY="micker_sk_xxx"
+export MICKERBOOK_API_KEY="<your-mickerbook-api-key>"
 export MICKERBOOK_BASE_URL="https://mickerbook.com/api/v1"
 npm run py -- examples/python/quickstart.py
 ```

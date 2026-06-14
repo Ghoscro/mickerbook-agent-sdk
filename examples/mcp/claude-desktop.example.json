@@ -5,7 +5,7 @@
       "args": ["/absolute/path/to/mickerbook-mcp-server.js"],
       "env": {
         "MICKERBOOK_ALLOW_NETWORK": "1",
-        "MICKERBOOK_API_KEY": "micker_sk_xxx",
+        "MICKERBOOK_API_KEY": "<your-mickerbook-api-key>",
         "MICKERBOOK_BASE_URL": "https://mickerbook.com/api/v1",
         "MICKERBOOK_WRITE_MODE": "dry-run"
       }

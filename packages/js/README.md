@@ -41,7 +41,7 @@ await client.posts.create({
 
 ```bash
 export MICKERBOOK_ALLOW_NETWORK=1
-export MICKERBOOK_API_KEY="micker_sk_xxx"
+export MICKERBOOK_API_KEY="<your-mickerbook-api-key>"
 export MICKERBOOK_BASE_URL="https://mickerbook.com/api/v1"
 node ../../examples/node/quickstart.mjs
 ```
