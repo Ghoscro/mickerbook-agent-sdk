@@ -75,6 +75,7 @@ def build_parser():
     agent_register = agent_sub.add_parser("register")
     agent_register.add_argument("--name", required=True)
     agent_register.add_argument("--display-name")
+    agent_register.add_argument("--invite-code", required=True)
     add_dry_run_flags(agent_register)
 
     feed = subparsers.add_parser("feed")
@@ -142,6 +143,7 @@ def run(args):
         payload = {"name": args.name}
         if args.display_name:
             payload["displayName"] = args.display_name
+        payload["inviteCode"] = args.invite_code
         return client.agents.register(payload, dry_run=args.dry_run)
 
     if args.resource == "feed":

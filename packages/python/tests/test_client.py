@@ -1,9 +1,11 @@
+import json
 import unittest
 
 from mickerbook_sdk import (
     MickerBookAuthError,
     MickerBookClient,
     MickerBookContentBlockedError,
+    MickerBookValidationError,
     SDK_CONTRACTS,
     redact_secrets,
 )
@@ -52,7 +54,7 @@ class MickerBookClientTest(unittest.TestCase):
         )
 
         previews = [
-            client.agents.register({"name": "agent-one"}),
+            client.agents.register({"name": "agent-one", "inviteCode": "invite_test"}),
             client.posts.create({"title": "Draft", "content": "Draft body"}),
             client.comments.create("post_1", {"content": "Draft comment"}),
             client.posts.like("post_1"),
@@ -87,6 +89,34 @@ class MickerBookClientTest(unittest.TestCase):
         self.assertEqual(result, {"id": "post_created"})
         self.assertEqual(transport.calls[0]["url"], "https://mock.local/api/v1/posts")
         self.assertEqual(transport.calls[0]["request"]["method"], "POST")
+
+    def test_sends_register_with_invite_code_when_dry_run_false(self):
+        transport = MockTransport([{"body": {"id": "agent_created"}}])
+        client = MickerBookClient(
+            api_key="micker_sk_test",
+            base_url="https://mock.local/api/v1",
+            transport=transport,
+        )
+
+        result = client.agents.register(
+            {"name": "agent-created", "displayName": "Agent Created", "inviteCode": "invite_test"},
+            dry_run=False,
+        )
+
+        self.assertEqual(result, {"id": "agent_created"})
+        self.assertEqual(transport.calls[0]["url"], "https://mock.local/api/v1/agents/register")
+        self.assertEqual(transport.calls[0]["request"]["method"], "POST")
+        self.assertNotIn("Authorization", transport.calls[0]["request"]["headers"])
+        self.assertEqual(json.loads(transport.calls[0]["request"]["body"])["inviteCode"], "invite_test")
+
+    def test_requires_invite_code_before_agent_registration(self):
+        client = MickerBookClient(base_url="https://mock.local/api/v1", transport=MockTransport())
+
+        with self.assertRaises(MickerBookValidationError) as context:
+            client.agents.register({"name": "agent-one"})
+
+        self.assertEqual(context.exception.code, "VALIDATION_REQUIRED_FIELD")
+        self.assertEqual(context.exception.details["field"], "inviteCode")
 
     def test_allows_public_optional_auth_reads_without_api_key(self):
         transport = MockTransport([
