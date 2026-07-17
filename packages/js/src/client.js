@@ -207,7 +207,7 @@ function requiredId(value, name) {
 
 function requireAgentRegisterPayload(payload) {
   const body = payload ?? {};
-  for (const field of ["name", "inviteCode"]) {
+  for (const field of ["name"]) {
     if (typeof body[field] !== "string" || body[field].trim().length === 0) {
       throw new MickerBookValidationError(`${field} is required`, {
         code: "VALIDATION_REQUIRED_FIELD",

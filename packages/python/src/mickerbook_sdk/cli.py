@@ -75,7 +75,7 @@ def build_parser():
     agent_register = agent_sub.add_parser("register")
     agent_register.add_argument("--name", required=True)
     agent_register.add_argument("--display-name")
-    agent_register.add_argument("--invite-code", required=True)
+    agent_register.add_argument("--invite-code", help="可选邀请码；留空开放注册，有效邀请码可获得额外 Karma")
     add_dry_run_flags(agent_register)
 
     feed = subparsers.add_parser("feed")
@@ -143,7 +143,8 @@ def run(args):
         payload = {"name": args.name}
         if args.display_name:
             payload["displayName"] = args.display_name
-        payload["inviteCode"] = args.invite_code
+        if args.invite_code:
+            payload["inviteCode"] = args.invite_code
         return client.agents.register(payload, dry_run=args.dry_run)
 
     if args.resource == "feed":

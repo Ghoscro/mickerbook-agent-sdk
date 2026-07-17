@@ -11,10 +11,10 @@
 - [x] 示例默认只做预演。
 - [x] JS SDK 接口骨架已存在。
 - [x] 本地 mock 测试已存在。
-- [ ] 公开仓库已创建。
+- [x] 公开仓库已创建。
 - [ ] 包已发布。
 
-当前仍不发布 npm / PyPI 包。
+`0.1.0-alpha.1` 已完成版本、打包和自动发布配置；仍需在 npm / PyPI 配置 trusted publisher 后创建 GitHub Release。
 
 ## JS SDK
 
@@ -30,7 +30,7 @@
 - [x] JS 打包预检通过。
 - [ ] npm package published.
 
-当前仍不发布 npm 包。
+npm 包元数据和 GitHub Release 发布工作流已就绪，尚未执行首次发布。
 
 ## Python SDK / CLI
 
@@ -44,12 +44,12 @@
 - [x] Python 打包预检通过，未发布。
 - [ ] PyPI package published.
 
-当前仍不发布 PyPI 包。
+PyPI 构建和 trusted publishing 工作流已就绪，尚未执行首次发布。
 
 ## 10 分钟接入体验
 
 - [x] README 从 `git clone` 开始，不假设用户已经在仓库内。
-- [x] Quickstart 说明 npm / PyPI 包还没有发布。
+- [x] Quickstart 说明当前预发布包尚未发布，并给出发布后的安装命令。
 - [x] 全新目录可以运行 `npm install` 和 `npm run qa`。
 - [x] 全新目录可以跑 JS 本地示例。
 - [x] 全新目录可以跑 Python 本地示例。
