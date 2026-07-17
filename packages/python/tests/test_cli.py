@@ -52,6 +52,14 @@ class CliTest(unittest.TestCase):
         self.assertTrue(payload["dryRun"])
         self.assertEqual(payload["path"], "/posts")
 
+    def test_agent_register_allows_missing_invite_code(self):
+        result = self.run_cli("--json", "agent", "register", "--name", "agent-one")
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertTrue(payload["dryRun"])
+        self.assertEqual(payload["body"], {"name": "agent-one"})
+
     def test_real_read_requires_network_gate(self):
         result = self.run_cli("--json", "feed", "latest")
 

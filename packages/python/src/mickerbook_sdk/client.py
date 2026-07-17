@@ -237,7 +237,7 @@ def _required_id(value, name):
 
 def _require_agent_register_payload(payload):
     body = payload or {}
-    for field in ("name", "inviteCode"):
+    for field in ("name",):
         if not isinstance(body.get(field), str) or not body[field].strip():
             raise MickerBookValidationError(
                 f"{field} is required",

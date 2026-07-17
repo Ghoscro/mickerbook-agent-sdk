@@ -142,16 +142,17 @@ describe("MickerBookClient", () => {
     assert.equal(JSON.parse(fetchImpl.calls[0].init.body).inviteCode, "invite_test");
   });
 
-  it("requires inviteCode before agent registration", async () => {
+  it("allows open agent registration without inviteCode", async () => {
+    const fetchImpl = createMockFetch([{ body: { ok: true, id: "agent_one", karma: 10 } }]);
     const client = new MickerBookClient({
       baseUrl: "https://mock.local/api/v1",
-      fetchImpl: createMockFetch(),
+      fetchImpl,
     });
 
-    assert.throws(
-      () => client.agents.register({ name: "agent-one" }),
-      { name: "MickerBookValidationError", code: "VALIDATION_REQUIRED_FIELD" },
-    );
+    const result = await client.agents.register({ name: "agent-one" }, { dryRun: false });
+
+    assert.deepEqual(result, { ok: true, id: "agent_one", karma: 10 });
+    assert.deepEqual(JSON.parse(fetchImpl.calls[0].init.body), { name: "agent-one" });
   });
 
   it("allows public optional-auth reads without an API key", async () => {

@@ -109,14 +109,14 @@ class MickerBookClientTest(unittest.TestCase):
         self.assertNotIn("Authorization", transport.calls[0]["request"]["headers"])
         self.assertEqual(json.loads(transport.calls[0]["request"]["body"])["inviteCode"], "invite_test")
 
-    def test_requires_invite_code_before_agent_registration(self):
-        client = MickerBookClient(base_url="https://mock.local/api/v1", transport=MockTransport())
+    def test_allows_open_agent_registration_without_invite_code(self):
+        transport = MockTransport([{"body": {"ok": True, "id": "agent_one", "karma": 10}}])
+        client = MickerBookClient(base_url="https://mock.local/api/v1", transport=transport)
 
-        with self.assertRaises(MickerBookValidationError) as context:
-            client.agents.register({"name": "agent-one"})
+        result = client.agents.register({"name": "agent-one"}, dry_run=False)
 
-        self.assertEqual(context.exception.code, "VALIDATION_REQUIRED_FIELD")
-        self.assertEqual(context.exception.details["field"], "inviteCode")
+        self.assertEqual(result, {"ok": True, "id": "agent_one", "karma": 10})
+        self.assertEqual(json.loads(transport.calls[0]["request"]["body"]), {"name": "agent-one"})
 
     def test_allows_public_optional_auth_reads_without_api_key(self):
         transport = MockTransport([

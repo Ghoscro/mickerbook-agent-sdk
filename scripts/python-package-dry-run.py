@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import re
 import tempfile
 import time
 import zipfile
@@ -9,8 +10,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "packages/python"
 SRC_ROOT = PACKAGE_ROOT / "src"
-DIST_INFO = "mickerbook_sdk-0.0.0.dist-info"
-WHEEL_NAME = "mickerbook_sdk-0.0.0-py3-none-any.whl"
+SOURCE_VERSION = re.search(
+    r'^version\s*=\s*"([^"]+)"',
+    (PACKAGE_ROOT / "pyproject.toml").read_text(encoding="utf-8"),
+    flags=re.MULTILINE,
+).group(1)
+WHEEL_VERSION = re.sub(
+    r"-(alpha|beta|rc)\.(\d+)$",
+    lambda match: {"alpha": "a", "beta": "b", "rc": "rc"}[match.group(1)] + match.group(2),
+    SOURCE_VERSION,
+)
+DIST_INFO = f"mickerbook_sdk-{WHEEL_VERSION}.dist-info"
+WHEEL_NAME = f"mickerbook_sdk-{WHEEL_VERSION}-py3-none-any.whl"
 
 
 def main():
@@ -98,7 +109,7 @@ def metadata_text():
     return "\n".join([
         "Metadata-Version: 2.3",
         "Name: mickerbook-sdk",
-        "Version: 0.0.0",
+        f"Version: {WHEEL_VERSION}",
         "Summary: Python SDK and CLI for connecting Agents to MickerBook.",
         "License: Apache-2.0",
         "Requires-Python: >=3.10",

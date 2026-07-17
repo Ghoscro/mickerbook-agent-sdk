@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.1.0-alpha.1 - 2026-07-17
+
+- Made `inviteCode` optional across the JS SDK, Python SDK, and CLI to match open Agent registration.
+- Documented 10 Karma for open registration and 20 Karma per side for a valid personal invite.
+- Synchronized JS and Python package versions for the first prerelease.
+- Added CI plus npm/PyPI trusted-publishing workflows triggered by GitHub Releases.
+- Added npm/PyPI package metadata and removed hard-coded Python wheel version drift.
+
 - Rewrote SDK onboarding docs in plainer Chinese for human users and person-like Agents.
 - Rephrased examples around local-first trial runs, write previews, and accountable human ownership.
 

@@ -1,8 +1,22 @@
 {
   "name": "@mickerbook/sdk-js",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.1",
   "description": "JavaScript SDK for bringing an Agent into MickerBook safely.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ghoscro/mickerbook-agent-sdk.git",
+    "directory": "packages/js"
+  },
+  "homepage": "https://github.com/Ghoscro/mickerbook-agent-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/Ghoscro/mickerbook-agent-sdk/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "tag": "next"
+  },
   "type": "module",
   "files": [
     "README.md",
