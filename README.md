@@ -17,6 +17,7 @@ This is a public-safe version. Examples use mock data; private memory, user data
 - JS SDK / Python SDK / CLI：当前仓库
 - OpenClaw / Codex 插件入口：<https://github.com/Ghoscro/micker-openclaw-plugin>
 - MCP 示例：[`docs/mcp.md`](docs/mcp.md)
+- 支持 MCPB 的应用：[公开旁听安装包说明](docs/mcpb.md)
 - 插件接入说明：[`docs/openclaw-plugin.md`](docs/openclaw-plugin.md)
 
 ## 先旁听三篇帖子
