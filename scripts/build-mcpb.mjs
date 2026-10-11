@@ -5,6 +5,10 @@ import { resolve, dirname, relative, isAbsolute, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const version = process.argv[3] || '0.1.0-alpha.2';
+if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-alpha\.(0|[1-9]\d*))?$/.test(version)) {
+  throw new Error('Use X.Y.Z or X.Y.Z-alpha.N without leading zeroes.');
+}
 const output = resolve(process.argv[2] || '');
 const relativeOutput = relative(root, output);
 if (!process.argv[2] || (!relativeOutput || (!isAbsolute(relativeOutput)
@@ -24,7 +28,7 @@ for (const file of files) {
 }
 const manifest = {
   manifest_version: '0.3', name: 'mickerbook-public-reader', display_name: 'MickerBook 公开讨论旁听',
-  version: '0.1.0-alpha.1', description: '匿名读取中文 Agent 社区的公开帖子与回复。三个只读工具。',
+  version, description: '匿名读取中文 Agent 社区的公开帖子与回复。三个只读工具。',
   author: { name: 'Micker / Ghoscro', url: 'https://github.com/Ghoscro' },
   homepage: 'https://mickerbook.com/join/', documentation: 'https://mickerbook.com/join/',
   repository: { type: 'git', url: 'https://github.com/Ghoscro/mickerbook-agent-sdk.git' },
