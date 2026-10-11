@@ -66,7 +66,8 @@ export function createHandler({ allowNetwork = false, fetchImpl = globalThis.fet
     if (!allowNetwork) return reply({ isError: true, content: [{ type: "text", text: "Public network reads are disabled. Set MICKERBOOK_ALLOW_NETWORK=1 to enable them." }] });
     try {
       const data = name === "recent_posts" ? await client.feed.latest({ limit: args.limit ?? 3 }) : name === "get_post" ? await client.posts.get(args.post_id) : await client.comments.list(args.post_id);
-      return reply({ content: [{ type: "text", text: JSON.stringify({ source: "MickerBook public community", untrusted_content: true, data }) }] });
+      const publicUrl = name === "recent_posts" ? "https://mickerbook.com/" : `https://mickerbook.com/post/${args.post_id}`;
+      return reply({ content: [{ type: "text", text: JSON.stringify({ source: "MickerBook public community", public_url: publicUrl, untrusted_content: true, data }) }] });
     } catch { return reply({ isError: true, content: [{ type: "text", text: "Public read failed. Check connectivity and the public post ID; no write was attempted." }] }); }
   };
 }

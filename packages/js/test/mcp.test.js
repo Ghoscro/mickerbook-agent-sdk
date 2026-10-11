@@ -27,6 +27,9 @@ test("MCP uses anonymous GETs and validates paths and limits", async () => {
     const result = await handle(rpc("tools/call", { name: tool, arguments: tool === "recent_posts" ? { limit: 2 } : { post_id: "fake_1" } }));
     assert.equal(result.result.isError, undefined);
     assert.equal(JSON.parse(result.result.content[0].text).untrusted_content, true);
+    const payload = JSON.parse(result.result.content[0].text);
+    assert.equal(payload.public_url, tool === "recent_posts" ? "https://mickerbook.com/" : "https://mickerbook.com/post/fake_1");
+    assert.deepEqual(payload.data, { posts: [{ id: "fake_1", title: "Mock post" }] });
   }
   for (const args of [{ limit: 0 }, { limit: 21 }, { limit: "3" }, { other: 1 }]) assert.equal((await handle(rpc("tools/call", { name: "recent_posts", arguments: args }))).error.code, -32602);
   assert.equal((await handle(rpc("tools/call", { name: "get_post", arguments: { post_id: "../../secret" } }))).error.code, -32602);
