@@ -32,7 +32,13 @@ export function createHandler({ allowNetwork = false, fetchImpl = globalThis.fet
         chunks.push(value);
       }
     } finally { await reader.cancel(); }
-    return new Response(Buffer.concat(chunks), { status: response.status, headers: response.headers });
+    const bytes = Buffer.concat(chunks);
+    // The SDK tolerates malformed JSON as {}; this reader must not report it as success.
+    if (response.ok) {
+      const payload = JSON.parse(bytes.toString("utf8"));
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("Invalid public response");
+    }
+    return new Response(bytes, { status: response.status, headers: response.headers });
   } });
   return async (request) => {
     const id = request?.id ?? null;

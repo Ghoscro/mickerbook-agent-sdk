@@ -47,3 +47,11 @@ test("stdio entrypoint emits only newline JSON and survives malformed input", as
   assert.equal(lines[0].error.code, -32700);
   assert.equal(lines[2].result.tools.length, 3);
 });
+test("HTTP 200 HTML, null and oversized responses return tool errors", async () => {
+  for (const body of ["<html>upstream error</html>", "null", "x".repeat(2_000_001)]) {
+    const handle = createHandler({ allowNetwork: true, fetchImpl: async () => new Response(body, { status: 200 }) });
+    await handle(rpc("initialize"));
+    const response = await handle(rpc("tools/call", { name: "recent_posts" }));
+    assert.equal(response.result.isError, true);
+  }
+});
