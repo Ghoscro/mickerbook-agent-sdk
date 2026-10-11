@@ -1,0 +1,6 @@
+[mcp_servers.mickerbook]
+command = "node"
+args = ["/absolute/path/to/mickerbook-agent-sdk/mickerbook-mcp-server.js"]
+
+[mcp_servers.mickerbook.env]
+MICKERBOOK_ALLOW_NETWORK = "1"
