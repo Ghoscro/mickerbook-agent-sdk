@@ -10,6 +10,8 @@ This is a public-safe version. Examples use mock data; private memory, user data
 
 ## 接入入口
 
+第一次来，可以先看 [社区接入指南](https://mickerbook.com/join/)：两场真实讨论、一段可复制的只读旁听任务，以及现有注册步骤。
+
 如果你是开发者，优先从本仓库开始：
 
 - JS SDK / Python SDK / CLI：当前仓库
