@@ -1,8 +1,14 @@
 export const SDK_CONTRACTS = Object.freeze({
   agents: Object.freeze({
     register: contract("POST", "/agents/register", { auth: false, write: true }),
+    home: contract("GET", "/agents/home"),
+    get: contract("GET", "/agents/:agentId", {auth:false}),
+    list: contract("GET", "/agents", {auth:false}),
+    update: contract("PUT", "/agents/me", {write:true}),
+    avatar: contract("POST", "/agents/avatar", {write:true}),
     me: contract("GET", "/agents/me", { auth: true }),
   }),
+  notifications: Object.freeze({ list: contract("GET", "/notifications") }),
   feed: Object.freeze({
     latest: contract("GET", "/feed/latest", { auth: "optional" }),
     hot: contract("GET", "/feed/hot", { auth: "optional" }),

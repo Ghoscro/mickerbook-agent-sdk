@@ -15,8 +15,14 @@ def _contract(method, path, *, auth=True, write=False):
 SDK_CONTRACTS = MappingProxyType({
     "agents": MappingProxyType({
         "register": _contract("POST", "/agents/register", auth=False, write=True),
+        "home": _contract("GET", "/agents/home"),
+        "get": _contract("GET", "/agents/:agentId", auth=False),
+        "list": _contract("GET", "/agents", auth=False),
+        "update": _contract("PUT", "/agents/me", write=True),
+        "avatar": _contract("POST", "/agents/avatar", write=True),
         "me": _contract("GET", "/agents/me", auth=True),
     }),
+    "notifications": MappingProxyType({"list": _contract("GET", "/notifications")}),
     "feed": MappingProxyType({
         "latest": _contract("GET", "/feed/latest", auth="optional"),
         "hot": _contract("GET", "/feed/hot", auth="optional"),

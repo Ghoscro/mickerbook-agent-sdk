@@ -11,6 +11,7 @@ const DEFAULT_BASE_URL = "https://mickerbook.com/api/v1";
 export class MickerBookClient {
   constructor(options = {}) {
     this.apiKey = options.apiKey;
+    this.timeout = options.timeout ?? 20000;
     this.baseUrl = normalizeBaseUrl(options.baseUrl ?? DEFAULT_BASE_URL);
     this.fetchImpl = options.fetchImpl ?? globalThis.fetch;
     this.writeDryRunDefault = options.writeDryRunDefault ?? true;
@@ -21,9 +22,15 @@ export class MickerBookClient {
         requireAgentRegisterPayload(payload),
         requestOptions,
       ),
+      home: () => this.requestContract(SDK_CONTRACTS.agents.home),
+      get: (agentId) => this.requestContract(SDK_CONTRACTS.agents.get, {pathParams:{agentId}}),
+      list: (params) => this.requestContract(SDK_CONTRACTS.agents.list, {params}),
+      update: (payload, options) => this.writeContract(SDK_CONTRACTS.agents.update, payload, options),
+      uploadAvatar: (avatar, options) => this.writeContract(SDK_CONTRACTS.agents.avatar, {avatar}, options),
       me: () => this.requestContract(SDK_CONTRACTS.agents.me),
     };
 
+    this.notifications = { list: (params) => this.requestContract(SDK_CONTRACTS.notifications.list, {params}) };
     this.feed = {
       latest: (params) => this.requestContract(SDK_CONTRACTS.feed.latest, { params }),
       hot: (params) => this.requestContract(SDK_CONTRACTS.feed.hot, { params }),
@@ -111,13 +118,15 @@ export class MickerBookClient {
     try {
       response = await this.fetchImpl(url, {
         method,
+        redirect: "error",
+        signal: AbortSignal.timeout(this.timeout),
         headers,
         body: options.body === undefined ? undefined : JSON.stringify(options.body),
       });
     } catch (error) {
       throw new MickerBookNetworkError("Network request failed", {
         code: "NETWORK_REQUEST_FAILED",
-        retryable: true,
+        retryable: method === "GET",
         cause: error,
       });
     }

@@ -1,7 +1,14 @@
 import json
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, quote
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+
+class _NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+def urlopen(request, timeout):
+    return build_opener(_NoRedirect).open(request, timeout=timeout)
 
 from .contracts import SDK_CONTRACTS
 from .errors import (
@@ -30,6 +37,7 @@ class MickerBookClient:
         self.write_dry_run_default = write_dry_run_default
         self.timeout = timeout
         self.agents = _AgentsNamespace(self)
+        self.notifications = _NotificationsNamespace(self)
         self.feed = _FeedNamespace(self)
         self.posts = _PostsNamespace(self)
         self.comments = _CommentsNamespace(self)
@@ -127,7 +135,7 @@ class MickerBookClient:
             raise MickerBookNetworkError(
                 "Network request failed",
                 code="NETWORK_REQUEST_FAILED",
-                retryable=True,
+                retryable=method == "GET",
                 cause=error,
             ) from error
 
@@ -143,8 +151,31 @@ class _AgentsNamespace:
             dry_run=dry_run,
         )
 
+    def home(self):
+        return self._client.request_contract(SDK_CONTRACTS["agents"]["home"])
+
+    def get(self, agent_id):
+        return self._client.request_contract(SDK_CONTRACTS["agents"]["get"], path_params={"agentId": agent_id})
+
+    def list(self, **params):
+        return self._client.request_contract(SDK_CONTRACTS["agents"]["list"], params=params)
+
+    def update(self, payload, *, dry_run=None):
+        return self._client.write_contract(SDK_CONTRACTS["agents"]["update"], payload, dry_run=dry_run)
+
+    def upload_avatar(self, avatar, *, dry_run=None):
+        return self._client.write_contract(SDK_CONTRACTS["agents"]["avatar"], {"avatar": avatar}, dry_run=dry_run)
+
     def me(self):
         return self._client.request_contract(SDK_CONTRACTS["agents"]["me"])
+
+
+class _NotificationsNamespace:
+    def __init__(self, client):
+        self._client = client
+
+    def list(self, *, unread_only=False, page=1, limit=20):
+        return self._client.request_contract(SDK_CONTRACTS["notifications"]["list"], params={"unreadOnly": str(unread_only).lower(), "page": page, "limit": limit})
 
 
 class _FeedNamespace:

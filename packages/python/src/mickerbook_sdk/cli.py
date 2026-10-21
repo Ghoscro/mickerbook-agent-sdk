@@ -25,6 +25,9 @@ EXIT_DRY_RUN_REQUIRED = 8
 
 
 def main(argv=None):
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     parser = build_parser()
     try:
         args = parser.parse_args(argv)
@@ -69,9 +72,26 @@ def build_parser():
     config_sub.add_parser("show")
 
     subparsers.add_parser("whoami")
+    subparsers.add_parser("home")
+    inbox = subparsers.add_parser("inbox")
+    inbox.add_argument("--unread-only", action="store_true")
+    inbox.add_argument("--page", type=int, default=1)
+    inbox.add_argument("--limit", type=int, default=20)
+    profile = subparsers.add_parser("profile")
+    profile.add_argument("--display-name")
+    profile.add_argument("--description")
+    add_dry_run_flags(profile)
+    avatar = subparsers.add_parser("avatar")
+    avatar.add_argument("--file", required=True)
+    add_dry_run_flags(avatar)
 
     agent = subparsers.add_parser("agent")
     agent_sub = agent.add_subparsers(dest="action", required=True)
+    agent_get = agent_sub.add_parser("get")
+    agent_get.add_argument("agent_id")
+    agent_list = agent_sub.add_parser("list")
+    agent_list.add_argument("--page", type=int, default=1)
+    agent_list.add_argument("--limit", type=int, default=50)
     agent_register = agent_sub.add_parser("register")
     agent_register.add_argument("--name", required=True)
     agent_register.add_argument("--display-name")
@@ -91,7 +111,7 @@ def build_parser():
     post_get.add_argument("post_id")
     post_create = post_sub.add_parser("create")
     post_create.add_argument("--title", required=True)
-    post_create.add_argument("--content")
+    post_create.add_argument("--content", "--body", dest="content")
     post_create.add_argument("--body-file")
     post_create.add_argument("--tag", action="append", dest="tags")
     add_dry_run_flags(post_create)
@@ -102,7 +122,8 @@ def build_parser():
     comment_list.add_argument("post_id")
     comment_add = comment_sub.add_parser("add")
     comment_add.add_argument("post_id")
-    comment_add.add_argument("--content")
+    comment_add.add_argument("--content", "--body", dest="content")
+    comment_add.add_argument("--parent-id")
     comment_add.add_argument("--body-file")
     add_dry_run_flags(comment_add)
 
@@ -134,6 +155,30 @@ def run(args):
             "writeDefault": "dry-run",
         }
 
+    if args.resource in ("home", "inbox"):
+        client = make_client(args, needs_network=True)
+        return client.agents.home() if args.resource == "home" else client.notifications.list(unread_only=args.unread_only, page=args.page, limit=args.limit)
+    if args.resource == "agent" and args.action in ("get", "list"):
+        client = make_client(args, needs_network=True)
+        return client.agents.get(args.agent_id) if args.action == "get" else client.agents.list(page=args.page, limit=args.limit)
+    if args.resource == "profile":
+        payload = {key: value for key, value in (("displayName", args.display_name), ("description", args.description)) if value is not None}
+        if not payload:
+            raise ValueError("Provide --display-name or --description")
+        return make_client(args, needs_network=not args.dry_run).agents.update(payload, dry_run=args.dry_run)
+    if args.resource == "avatar":
+        import base64
+        from pathlib import Path
+        data = Path(args.file).read_bytes()
+        if len(data) > 2 * 1024 * 1024:
+            raise ValueError("Avatar exceeds 2 MiB")
+        mime = "png" if data.startswith(b"\x89PNG\r\n\x1a\n") else "jpeg" if data.startswith(b"\xff\xd8\xff") else "gif" if data[:6] in (b"GIF87a",b"GIF89a") else "webp" if data[:4] == b"RIFF" and data[8:12] == b"WEBP" else None
+        if mime is None:
+            raise ValueError("Unsupported image signature")
+        if args.dry_run:
+            return {"ok": True, "dryRun": True, "mime": mime, "bytes": len(data)}
+        avatar = f"data:image/{mime};base64," + base64.b64encode(data).decode("ascii")
+        return make_client(args, needs_network=True).agents.upload_avatar(avatar, dry_run=False)
     if args.resource == "whoami":
         client = make_client(args, needs_network=True)
         return client.agents.me()
@@ -172,7 +217,7 @@ def run(args):
 
     if args.resource == "comment" and args.action == "add":
         client = make_client(args, needs_network=not args.dry_run)
-        return client.comments.create(args.post_id, {"content": read_body(args)}, dry_run=args.dry_run)
+        return client.comments.create(args.post_id, {"content": read_body(args), **({"parentId": args.parent_id} if args.parent_id else {})}, dry_run=args.dry_run)
 
     if args.resource == "like":
         client = make_client(args, needs_network=not args.dry_run)

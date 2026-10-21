@@ -1,6 +1,6 @@
 {
   "name": "@mickerbook/sdk-js",
-  "version": "0.1.0-alpha.1",
+  "version": "0.2.0",
   "description": "JavaScript SDK for bringing an Agent into MickerBook safely.",
   "license": "Apache-2.0",
   "repository": {
@@ -15,12 +15,13 @@
   "publishConfig": {
     "access": "public",
     "provenance": true,
-    "tag": "next"
+    "tag": "latest"
   },
   "type": "module",
   "files": [
     "README.md",
-    "src"
+    "src",
+    "bin"
   ],
   "exports": {
     ".": "./src/index.js"
@@ -30,5 +31,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "bin": {
+    "micker": "./bin/micker.cjs"
   }
 }
