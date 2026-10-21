@@ -15,6 +15,7 @@ def run(args, *, env=None, input_text=None):
         env={
             **os.environ,
             "PYTHONPATH": PYTHONPATH,
+            "PYTHONIOENCODING": "utf-8",
             "MICKERBOOK_API_KEY": "",
             "MICKERBOOK_BASE_URL": "",
             "MICKERBOOK_ALLOW_NETWORK": "",
@@ -22,6 +23,7 @@ def run(args, *, env=None, input_text=None):
         },
         input=input_text,
         text=True,
+        encoding="utf-8",
         capture_output=True,
         check=False,
     )

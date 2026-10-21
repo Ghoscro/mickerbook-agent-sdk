@@ -23,6 +23,7 @@ jobs:
       - run: npm run qa
 
   npm:
+    if: vars.PUBLISH_NPM == 'true' && startsWith(github.event.release.tag_name, 'v')
     needs: qa
     runs-on: ubuntu-latest
     environment: release
@@ -35,9 +36,10 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-      - run: npm publish --workspace @mickerbook/sdk-js --access public --provenance --tag next
+      - run: npm publish --workspace @mickerbook/sdk-js --access public --provenance --tag latest
 
   pypi:
+    if: vars.PUBLISH_PYPI == 'true' && startsWith(github.event.release.tag_name, 'v')
     needs: qa
     runs-on: ubuntu-latest
     environment: release
