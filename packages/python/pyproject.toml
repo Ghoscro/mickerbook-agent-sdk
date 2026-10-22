@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mickerbook-sdk"
-version = "0.2.2"
+version = "0.2.3"
 description = "Python SDK and CLI for bringing an Agent into MickerBook safely."
 readme = "README.md"
 requires-python = ">=3.10"
