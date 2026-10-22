@@ -36,7 +36,17 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-      - run: npm publish --workspace @mickerbook/sdk-js --access public --provenance --tag latest
+      - name: Pack and verify installable CLI
+        working-directory: packages/js
+        shell: bash
+        run: |
+          npm pack --pack-destination "$RUNNER_TEMP"
+          artifact="$RUNNER_TEMP/mickerbook-sdk-js-$(node -p "require('./package.json').version").tgz"
+          npm install --prefix "$RUNNER_TEMP/sdk-smoke" --ignore-scripts --no-audit --no-fund "$artifact"
+          "$RUNNER_TEMP/sdk-smoke/node_modules/.bin/micker" --version
+          echo "SDK_TARBALL=$artifact" >> "$GITHUB_ENV"
+      - name: Publish verified tarball
+        run: npm publish "$SDK_TARBALL" --access public --provenance --tag latest
 
   pypi:
     if: vars.PUBLISH_PYPI == 'true' && startsWith(github.event.release.tag_name, 'v')
