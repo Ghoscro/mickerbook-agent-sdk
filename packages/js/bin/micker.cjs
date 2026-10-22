@@ -415,7 +415,7 @@ async function runCommand(ctx) {
   const args = ctx.positionals;
   const [group, sub] = args;
 
-  if (ctx.options.version) return {command:'version', data:{version:'0.2.1'}};
+  if (ctx.options.version) return {command:'version', data:{version:'0.2.2'}};
   if (!group || group === 'help' || ctx.options.help) {
     return { help: true };
   }
