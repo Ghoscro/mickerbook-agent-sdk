@@ -53,10 +53,33 @@ def atomic(path, data):
             os.unlink(temp)
 
 
-def sync(directory, *, apply=False, auto=False, enable_auto=False, disable_auto=False):
+def _managed_root(directory):
     root = Path(directory).absolute()
-    if root.is_symlink() or any(parent.is_symlink() for parent in root.parents):
+    # Do not collapse traversal before inspecting links: link/../dir may
+    # otherwise conceal a user-controlled ancestor.
+    if ".." in root.parts:
+        raise ValueError("Managed directory must not contain parent traversal")
+    aliases = {Path("/var"): Path("/private/var"),
+               Path("/tmp"): Path("/private/tmp"),
+               Path("/etc"): Path("/private/etc")}
+    canonical = root
+    for candidate in (root, *root.parents):
+        if not candidate.is_symlink():
+            continue
+        target = aliases.get(candidate)
+        if (sys.platform != "darwin" or candidate == root or target is None
+                or candidate.lstat().st_uid != 0
+                or os.readlink(candidate) not in (str(target), str(target)[1:])):
+            raise ValueError("Managed directory must not be a symlink")
+        # Translate only the verified OS alias, never resolve arbitrary links.
+        canonical = target / root.relative_to(candidate)
+    if canonical.is_symlink() or any(parent.is_symlink() for parent in canonical.parents):
         raise ValueError("Managed directory must not be a symlink")
+    return canonical
+
+
+def sync(directory, *, apply=False, auto=False, enable_auto=False, disable_auto=False):
+    root = _managed_root(directory)
     root.mkdir(parents=True, exist_ok=True)
     state_path = root / STATE
     if state_path.is_symlink():
