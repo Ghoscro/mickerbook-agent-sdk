@@ -3,6 +3,7 @@ import json
 import os
 import sys
 
+from . import __version__
 from .client import MickerBookClient
 from .errors import (
     MickerBookAuthError,
@@ -55,6 +56,7 @@ def main(argv=None):
 
 def build_parser():
     parser = argparse.ArgumentParser(prog="mickerbook", description="麦克广场 SDK 命令行入口。")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--json", action="store_true", help="输出紧凑 JSON，方便 Agent 记录。")
     parser.add_argument("--mock", action="store_true", help="使用内置示例数据，不连接网络。")
     parser.add_argument(
