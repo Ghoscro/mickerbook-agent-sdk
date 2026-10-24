@@ -37,13 +37,14 @@ export class MickerBookNetworkError extends MickerBookError {}
 export class MickerBookDryRunRequiredError extends MickerBookError {}
 
 export function errorFromResponse(status, payload = {}, requestId) {
-  const errorPayload = payload.error && typeof payload.error === "object"
+  payload = isRecord(payload) ? payload : {};
+  const errorPayload = isRecord(payload.error)
     ? payload.error
     : payload;
   const code = normalizeCode(errorPayload.code, status);
-  const message = errorPayload.message
-    ?? payload.message
-    ?? `MickerBook API request failed with status ${status}`;
+  const message = typeof errorPayload.message === "string" ? errorPayload.message
+    : typeof payload.message === "string" ? payload.message
+    : `MickerBook API request failed with status ${status}`;
   const details = errorPayload.details ?? {};
   const retryable = status >= 500 || status === 429;
   const options = { code, status, requestId, details, retryable };
@@ -89,3 +90,6 @@ function isContentBlocked(code, message) {
     || text.includes("违规");
 }
 
+function isRecord(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}

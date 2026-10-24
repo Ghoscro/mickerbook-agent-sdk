@@ -62,14 +62,14 @@ class MickerBookDryRunRequiredError(MickerBookError):
 
 
 def error_from_response(status, payload=None, request_id=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     error_payload = payload.get("error") if isinstance(payload.get("error"), dict) else payload
     code = _normalize_code(error_payload.get("code"), status)
-    message = (
-        error_payload.get("message")
-        or payload.get("message")
-        or f"MickerBook API request failed with status {status}"
-    )
+    message = error_payload.get("message")
+    if not isinstance(message, str) or not message:
+        message = payload.get("message")
+    if not isinstance(message, str) or not message:
+        message = f"MickerBook API request failed with status {status}"
     details = error_payload.get("details") or {}
     retryable = status >= 500 or status == 429
     kwargs = {
