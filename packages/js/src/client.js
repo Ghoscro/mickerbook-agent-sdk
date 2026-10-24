@@ -1,5 +1,6 @@
 import {
   MickerBookAuthError,
+  MickerBookApiError,
   MickerBookNetworkError,
   MickerBookValidationError,
   errorFromResponse,
@@ -131,9 +132,34 @@ export class MickerBookClient {
       });
     }
 
-    const payload = await parseJsonResponse(response);
     const requestId = response.headers?.get?.("x-request-id")
       ?? response.headers?.get?.("X-Request-Id");
+    let payload;
+    try {
+      payload = response.status === 204 ? null : await response.json();
+    } catch (error) {
+      if (!(error instanceof SyntaxError)) {
+        throw new MickerBookNetworkError("Network request failed", {
+          code: "NETWORK_REQUEST_FAILED",
+          status: response.status,
+          requestId,
+          retryable: method === "GET",
+          cause: error,
+        });
+      }
+      // Gateways may return HTML or empty bodies on an HTTP error. Keep
+      // the status-based error mapping, but never turn invalid success JSON
+      // (or a failed body read) into a successful empty object.
+      if (response.ok) {
+        throw new MickerBookApiError("Invalid JSON response", {
+          code: "INVALID_JSON_RESPONSE",
+          status: response.status,
+          requestId,
+          cause: error,
+        });
+      }
+      payload = {};
+    }
 
     if (!response.ok) {
       throw errorFromResponse(response.status, payload, requestId);
@@ -226,16 +252,4 @@ function requireAgentRegisterPayload(payload) {
     }
   }
   return body;
-}
-
-async function parseJsonResponse(response) {
-  if (response.status === 204) {
-    return null;
-  }
-
-  try {
-    return await response.json();
-  } catch {
-    return {};
-  }
 }
