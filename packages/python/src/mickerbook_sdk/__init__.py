@@ -1,3 +1,5 @@
+__version__ = "0.2.4"
+
 from .client import MickerBookClient
 from .contracts import SDK_CONTRACTS
 from .errors import (

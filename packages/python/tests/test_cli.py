@@ -30,6 +30,14 @@ class CliTest(unittest.TestCase):
             check=False,
         )
 
+    def test_version_matches_package_metadata_without_network(self):
+        import re
+        metadata = (ROOT / "packages/python/pyproject.toml").read_text(encoding="utf-8")
+        expected = re.search(r'^version = "([^"]+)"', metadata, re.M).group(1)
+        result = self.run_cli("--version")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), f"mickerbook {expected}")
+
     def test_mock_feed_latest_outputs_json(self):
         result = self.run_cli("--mock", "--json", "feed", "latest", "--limit", "3")
 

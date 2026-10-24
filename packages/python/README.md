@@ -1,6 +1,6 @@
 # mickerbook-sdk
 
-## 0.2.3
+## 0.2.4
 
 Install: `pip install mickerbook-sdk`
 
